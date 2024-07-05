@@ -1,0 +1,27 @@
+alias: Nachricht von Telegram an eTag
+description: ""
+use_blueprint:
+  path: marc-romu/telegram-bot--command__action.yaml
+  input:
+    telegram_command: /text
+    sequence:
+      - service: open_epaper_link.drawcustom
+        metadata: {}
+        data:
+          background: white
+          payload:
+            - type: text
+              value: "{{ telegram_sender_first_name }}:"
+              x: 10
+              "y": 10
+              size: 20
+              align: center
+            - type: text
+              value: "{{ telegram_args_as_text }}"
+              x: 10
+              "y": 30
+              size: 16
+              max_width: 130
+        target
+          entity_id: open_epaper_link.000002112345566  // REPLACE with your entity_id
+    telegram_bot: telegrambot // REPLACE with your Telegram bot name
