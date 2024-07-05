@@ -23,5 +23,5 @@ use_blueprint:
               size: 16
               max_width: 130
         target
-          entity_id: open_epaper_link.000002112345566  // REPLACE with your entity_id
-    telegram_bot: telegrambot // REPLACE with your Telegram bot name
+          entity_id: open_epaper_link.000002112345566
+    telegram_bot: telegrambot

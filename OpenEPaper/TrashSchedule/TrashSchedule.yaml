@@ -1,0 +1,175 @@
+alias: OpenEPaperLink_Muellkalender
+description: Müllkalender
+trigger:
+  - platform: time_pattern
+    hours: /12
+condition: []
+action:
+  - service: open_epaper_link.drawcustom
+    target:
+      entity_id:
+        - open_epaper_link.1234567890
+    data:
+      background: white
+      rotate: 0
+      payload:
+        - type: text
+          value: "{{ states('sensor.nachste_abholung') }}"
+          font: ppb.ttf
+          x: 0
+          "y": 10
+          size: 28
+          color: black
+        - type: icon
+          value: >
+            {{ 'battery-100' if is_state('sensor.tag266_2_battery', '100') else
+            'battery-50' }}
+          x: 280
+          "y": 0
+          size: 12
+          color: >
+            {{ 'black' if is_state('sensor.tag266_2_battery', '100') else 'red'
+            }}
+        - type: text
+          value: Bio
+          font: ppb.ttf
+          x: 15
+          "y": 60
+          size: 14
+        - type: text
+          value: >-
+            {{ states('sensor.biomull') | replace('Bioabfall ', '') |
+            replace('in ', '') |  replace('tagen', 'Tage')}}
+          font: ppb.ttf
+          x: 5
+          "y": 130
+          size: 12
+        - type: icon
+          value: >
+            {% set bioabfall_wert = states('sensor.biomull') | string |
+            replace('Bioabfall ', '') | replace('in ', '')  | replace(' tagen',
+            '') %} {% if bioabfall_wert == 'Morgen' %}
+              delete-alert-outline
+            {% elif bioabfall_wert == '2' %}
+              delete-clock-outline
+            {% elif bioabfall_wert == '3' %}
+              delete-empty-outline
+            {% elif bioabfall_wert == '4' %}
+              delete-variant
+            {% elif bioabfall_wert == '5' %}
+              delete-outline
+            {% else %}
+               delete-sweep-outline
+            {% endif %}
+          x: 3
+          "y": 70
+          size: 60
+          color: >
+            {{ 'red' if is_state('sensor.biomull', 'Bioabfall Morgen') else
+            'black' }}
+        - type: text
+          value: Gelb
+          font: ppb.ttf
+          x: 80
+          "y": 60
+          size: 14
+        - type: text
+          value: >-
+            {{ states('sensor.gelber_sack') | replace('Leichtverpackungen in ',
+            '') | replace('tagen', 'Tage') }}
+          font: ppb.ttf
+          x: 75
+          "y": 130
+          size: 12
+        - type: icon
+          value: >
+            {% set gelbetonne_wert = states('sensor.gelber_sack') | string |
+            replace('Leichtverpackungen ', '') | replace('in ', '') | replace('
+            tagen', '') %} {% if gelbetonne_wert == 'Morgen' %}
+              delete-alert-outline
+            {% elif gelbetonne_wert == '2' %}
+              delete-clock-outline
+            {% elif gelbetonne_wert == '3' %}
+              delete-empty-outline
+            {% elif gelbetonne_wert == '4' %}
+              delete-variant
+            {% elif gelbetonne_wert == '5' %}
+              delete-outline
+            {% else %}
+               delete-sweep-outline
+            {% endif %}
+          x: 72
+          "y": 70
+          size: 60
+          color: black
+        - type: text
+          value: Rest
+          font: ppb.ttf
+          x: 155
+          "y": 60
+          size: 12
+        - type: text
+          value: >-
+            {{ states('sensor.restmull') | replace('Restabfall ', '') |
+            replace('in ', '') | replace('tagen', 'Tage') }}
+          font: ppb.ttf
+          x: 155
+          "y": 130
+          size: 12
+        - type: icon
+          value: >
+            {% set restabfall_wert = states('sensor.restmull') | string |
+            replace('Restabfall ', '') | replace('in ', '') | replace(' tagen',
+            '') %} {% if restabfall_wert == 'Morgen' %}
+              delete-alert-outline
+            {% elif restabfall_wert == '2' %}
+              delete-clock-outline
+            {% elif restabfall_wert == '3' %}
+              delete-empty-outline
+            {% elif restabfall_wert == '4' %}
+              delete-variant
+            {% elif restabfall_wert == '5' %}
+              delete-outline
+            {% else %}
+               delete-sweep-outline
+            {% endif %}
+          x: 150
+          "y": 70
+          size: 60
+          color: black
+        - type: text
+          value: Papier
+          font: ppb.ttf
+          x: 225
+          "y": 60
+          size: 14
+        - type: text
+          value: >-
+            {{ states('sensor.papier') | replace('Papier ', '') | replace('in ',
+            '') | replace('tagen', 'Tage') }}
+          font: ppb.ttf
+          x: 225
+          "y": 130
+          size: 12
+        - type: icon
+          value: >
+            {% set papier_wert = states('sensor.papier') | string |
+            replace('Papier ', '') | replace('in ', '') | replace(' tagen', '')
+            %} {% if papier_wert == 'Morgen' %}
+              delete-alert-outline
+            {% elif papier_wert == '2' %}
+              delete-clock-outline
+            {% elif papier_wert == '3' %}
+              delete-empty-outline
+            {% elif papier_wert == '4' %}
+              delete-variant
+            {% elif papier_wert == '5' %}
+              delete-outline
+            {% else %}
+               delete-sweep-outline
+            {% endif %}
+          x: 220
+          "y": 70
+          size: 60
+          color: black
+mode: single
