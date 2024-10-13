@@ -1,0 +1,217 @@
+alias: Stundenplan ePaper
+description: Stundenplan für den nächsten Tag auf einem ePaper Display
+trigger:
+  - platform: time_pattern
+    hours: /1
+    minutes: "1"
+condition:
+  - condition: or
+    conditions:
+      - condition: time
+        after: "06:00:00"
+        weekday:
+          - mon
+          - tue
+          - wed
+          - thu
+          - fri
+          - sun
+        before: "09:00:00"
+      - condition: time
+        after: "15:00:00"
+        weekday:
+          - mon
+          - tue
+          - wed
+          - thu
+          - fri
+          - sun
+        before: "23:00:00"
+action:
+  - variables:
+      stundenplan: >-
+        {{state_attr('sensor.NAME_SCHULE_de_next_lesson_to_wake_up',
+        'day') | from_json | sort(attribute='start') }}
+      day_name_german:
+        Monday: Montag
+        Tuesday: Dienstag
+        Wednesday: Mittwoch
+        Thursday: Donnerstag
+        Friday: Freitag
+        Saturday: Samstag
+        Sunday: Sonntag
+      day_name_german_short:
+        Monday: Mo
+        Tuesday: Di
+        Wednesday: Mi
+        Thursday: Do
+        Friday: Fr
+        Saturday: Sa
+        Sunday: So
+  - target:
+      entity_id:
+        - open_epaper_link.9876543210
+    data:
+      background: white
+      rotate: 0
+      payload:
+        - type: text
+          value: >
+            Stundenplan {{
+            day_name_german_short[as_timestamp(stundenplan[0].start) |
+            timestamp_custom('%A')] }}, {{ as_timestamp(stundenplan[0].start) |
+            timestamp_custom('%d.%m.') }}
+          font: ppb.ttf
+          x: 0
+          "y": 10
+          size: 20
+          color: black
+        - type: text
+          value: "{{ as_timestamp(stundenplan[0].start) | timestamp_custom('%H:%M') }}"
+          font: ppb.ttf
+          x: 0
+          "y": 30
+          size: 10
+          color: black
+        - type: text
+          value: "{{ as_timestamp(stundenplan[0].end) | timestamp_custom('%H:%M') }}"
+          font: ppb.ttf
+          x: 0
+          "y": 40
+          size: 10
+          color: black
+        - type: text
+          value: >-
+            {{ stundenplan[0].subjects.0.long_name }}{% if
+            stundenplan[0].original_rooms[0] is defined %}
+            {{stundenplan[0].rooms[0].name}}{% endif %}
+          x: 40
+          "y": 30
+          size: 20
+          color: >-
+            {{ 'red' if stundenplan[0] is defined and stundenplan[0].code ==
+            'irregular' else 'black' }}
+        - type: text
+          value: "{{ as_timestamp(stundenplan[1].start) | timestamp_custom('%H:%M') }}"
+          font: ppb.ttf
+          x: 0
+          "y": 55
+          size: 10
+          color: black
+        - type: text
+          value: "{{ as_timestamp(stundenplan[1].end) | timestamp_custom('%H:%M') }}"
+          font: ppb.ttf
+          x: 0
+          "y": 65
+          size: 10
+          color: black
+        - type: text
+          value: >-
+            {{ stundenplan[1].subjects.0.long_name }}{% if
+            stundenplan[1].original_rooms[0] is defined %}
+            {{stundenplan[1].rooms[0].name}}{% endif %}
+          x: 40
+          "y": 55
+          size: 20
+          color: >-
+            {{ 'red' if stundenplan[1] is defined and stundenplan[1].code ==
+            'irregular' else 'black' }}
+        - type: text
+          value: "{{ as_timestamp(stundenplan[2].start) | timestamp_custom('%H:%M') }}"
+          font: ppb.ttf
+          x: 0
+          "y": 80
+          size: 10
+          color: black
+        - type: text
+          value: "{{ as_timestamp(stundenplan[2].end) | timestamp_custom('%H:%M') }}"
+          x: 0
+          "y": 90
+          size: 10
+          color: black
+        - type: text
+          value: >-
+            {{ stundenplan[2].subjects.0.long_name }} {% if
+            stundenplan[2].original_rooms[0] is defined %}
+             {{stundenplan[2].rooms[0].name}} {% endif %}
+          x: 40
+          "y": 80
+          size: 20
+          color: >-
+            {{ 'red' if stundenplan[2] is defined and stundenplan[2].code ==
+            'irregular' else 'black' }}
+        - type: text
+          value: |-
+            {% if stundenplan[3] is defined %}
+              {{ as_timestamp(stundenplan[3].start) | timestamp_custom('%H:%M') }}
+            {% endif %}
+          x: 0
+          "y": 105
+          size: 10
+          color: black
+        - type: text
+          value: |-
+            {% if stundenplan[3] is defined %}
+             {{ as_timestamp(stundenplan[3].end) | timestamp_custom('%H:%M') }}
+            {% endif %}
+          font: ppb.ttf
+          x: 0
+          "y": 115
+          size: 10
+          color: black
+        - type: text
+          value: |-
+            {% if stundenplan[3] is defined %}
+              {{ stundenplan[3].subjects.0.long_name }}{% if
+            stundenplan[3].original_rooms[0] is defined %}
+             {{stundenplan[3].rooms[0].name}} {% endif %}
+            {% endif %}
+          x: 40
+          "y": 105
+          size: 20
+          color: >-
+            {{ 'red' if stundenplan[3] is defined and stundenplan[3].code ==
+            'irregular' else 'black' }}
+        - type: text
+          value: |-
+            {% if stundenplan[4] is defined %}
+              {{ as_timestamp(stundenplan[4].start) | timestamp_custom('%H:%M') }}
+            {% endif %}
+          x: 0
+          "y": 130
+          size: 10
+          color: black
+        - type: text
+          value: |-
+            {% if stundenplan[4] is defined %}
+              {{ as_timestamp(stundenplan[4].end) | timestamp_custom('%H:%M') }}
+            {% endif %}
+          x: 0
+          "y": 140
+          size: 10
+          color: black
+        - type: text
+          value: |-
+            {% if stundenplan[4] is defined %}
+              {{ stundenplan[4].subjects[0].long_name }}{% if
+            stundenplan[4].original_rooms[0] is defined %}
+             {{stundenplan[4].rooms[0].name}} {% endif %}
+            {% endif %}
+          x: 40
+          "y": 130
+          size: 20
+          color: >-
+            {{ 'red' if stundenplan[4] is defined and stundenplan[4].code ==
+            'irregular' else 'black' }}
+        - type: icon
+          value: >
+            {{ 'battery-100' if is_state('sensor.tag266_2_battery', '100') else
+            'battery-50' }}
+          x: 280
+          "y": 0
+          size: 12
+          color: >
+            {{ 'black' if is_state('sensor.tag266_2_battery', '100') else 'red'
+            }}
+    action: open_epaper_link.drawcustom
+mode: single
