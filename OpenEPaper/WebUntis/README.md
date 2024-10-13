@@ -11,4 +11,5 @@ You need to change the following values:
 * sensor sensor.NAME_SCHULE_de_next_lesson_to_wake_up (33)
 * sensor open_epaper_link.9876543210 (53)
 * battery sensor name sensor.tag266_2_battery (208 + 214)
+
 ![webuntistag.jpeg](webuntistag.jpeg)
